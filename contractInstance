@@ -1,0 +1,12 @@
+const contractABI = [...]; // 合约 ABI
+const contractAddress = '0xContractAddress';
+const contractInstance = new web3.eth.Contract(contractABI, contractAddress);
+
+contractInstance.methods.myMethod(param1, param2, ...)
+  .send({ from: senderAddress, gas: 200000 })
+  .then(receipt => {
+    console.log('Transaction receipt:', receipt);
+  })
+  .catch(error => {
+    console.error('Error occurred:', error);
+  });
