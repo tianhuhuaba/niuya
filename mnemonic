@@ -1,0 +1,31 @@
+const { SigningStargateClient } = require('@cosmjs/stargate');
+const { Secp256k1Pen, makeCosmoshubPath, SigningCosmosClient, GasPrice, GasLimits } = require('@cosmjs/launchpad');
+
+async function sendAtom() {
+  const rpcUrl = 'https://rpc.cosmos.network'; // Cosmos RPC 节点地址
+  const chainId = 'cosmoshub-4'; // Cosmos 网络链ID
+
+  // 通过助记词获取私钥
+  const mnemonic = 'YOUR_MNEMONIC';
+  const path = makeCosmoshubPath(0);
+  const pen = await Secp256k1Pen.fromMnemonic(mnemonic, path);
+
+  // 创建签名客户端
+  const client = new SigningStargateClient(rpcUrl, pen);
+
+  // 设置接收者地址
+  const recipientAddress = 'RECIPIENT_ATOM_ADDRESS';
+
+  // 设置转账金额
+  const amount = {
+    denom: 'uatom', // Atom 的最小单位为 uatom
+    amount: '1000000', // 1 Atom
+  };
+
+  // 构造交易消息
+  const result = await client.sendTokens(pen.address, recipientAddress, [amount], GasPrice.fromString('0.025uatom'), GasLimits.max());
+
+  console.log('Transaction hash:', result.transactionHash);
+}
+
+sendAtom().catch(console.error);
